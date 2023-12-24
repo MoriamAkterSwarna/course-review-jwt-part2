@@ -1,30 +1,40 @@
 import { Schema, model } from 'mongoose';
 import { TCourse, TDetails, TTags } from './course.interface';
 
-export const TagsSchema = new Schema<TTags>({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
+export const TagsSchema = new Schema<TTags>(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
-  isDeleted: {
-    type: Boolean,
-    default: false,
+  {
+    _id: false,
   },
-});
+);
 
-export const DetailsSchema = new Schema<TDetails>({
-  level: {
-    type: String,
-    required: true,
-    trim: true,
+export const DetailsSchema = new Schema<TDetails>(
+  {
+    level: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    description: {
+      type: String,
+      required: true,
+      trim: true,
+    },
   },
-  description: {
-    type: String,
-    required: true,
-    trim: true,
+  {
+    _id: false,
   },
-});
+);
 const courseSchema = new Schema<TCourse>(
   {
     title: {
@@ -82,6 +92,11 @@ const courseSchema = new Schema<TCourse>(
     },
     details: {
       type: DetailsSchema,
+      required: true,
+    },
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
   },
