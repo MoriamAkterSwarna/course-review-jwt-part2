@@ -38,6 +38,7 @@ const globalErrorHandler = (
     errorMessage: errorResponse.errorMessage,
     errorDetails: errorResponse.errorDetails,
     stack: err.stack || '',
+    data: err.data || null,
   });
 };
 

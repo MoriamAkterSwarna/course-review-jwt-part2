@@ -6,7 +6,7 @@ import { CourseValidation } from './course.validation';
 export const router = express.Router();
 
 router.post(
-  '/course',
+  '/courses',
   authHelp('admin'),
   validateZodRequest(CourseValidation.createCourseValidationSchema),
   CourseController.createCourse,
@@ -14,6 +14,7 @@ router.post(
 router.get('/courses', CourseController.getAllCourses);
 router.put(
   '/courses/:courseId',
+  authHelp('admin'),
   validateZodRequest(CourseValidation.updateCourseValidationSchema),
   CourseController.updateCourse,
 );

@@ -19,6 +19,7 @@ export type TErrorResponse = {
   };
   issues?: TErrorIssue[];
   stack?: string;
+  data?: any;
 };
 export type TErrorIssue = {
   expected?: string;

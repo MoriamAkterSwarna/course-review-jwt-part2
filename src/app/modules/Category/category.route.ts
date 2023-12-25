@@ -13,7 +13,7 @@ router.post(
 );
 router.get(
   '/',
-  // authHelp('admin'),
+
   CategoryController.getAllCategoriesController,
 );
 

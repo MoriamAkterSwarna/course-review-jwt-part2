@@ -4,6 +4,7 @@ import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
 import { config } from '../../config';
 import GenericError from '../../errors/genericError';
+import JWTError from '../../errors/jwtError';
 import { User } from '../user/user.model';
 import { TLoginUser } from './auth.interface';
 import { createToken } from './auth.utils';
@@ -74,9 +75,10 @@ const changePassword = async (
     const formattedDate = `${lastPasswordChange.getDate()}-${
       lastPasswordChange.getMonth() + 1
     }-${lastPasswordChange.getFullYear()} at ${lastPasswordChange.getHours()}:${lastPasswordChange.getMinutes()}`;
-    throw new GenericError(
+    throw new JWTError(
       httpStatus.UNAUTHORIZED,
       `Password change failed. Ensure the new password is unique and not among the last 2 used (last used on ${formattedDate}).`,
+      null,
     );
   }
   const isPasswordMatched = await bcrypt.compare(

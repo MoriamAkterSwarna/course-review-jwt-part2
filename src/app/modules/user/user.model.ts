@@ -50,7 +50,7 @@ UserSchema.pre('save', async function (next) {
 
 UserSchema.post('save', async function (doc, next) {
   const user = await User.findById(doc._id).select(
-    '-password -passwordHistory',
+    '-password -passwordHistory -updatePasswordAt',
   );
   if (user) {
     Object.assign(doc, user);
