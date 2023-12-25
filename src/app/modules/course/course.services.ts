@@ -6,12 +6,18 @@ import GenericError from '../../errors/genericError';
 import { TCourse } from './course.interface';
 import { Course } from './course.model';
 
-const createCourseIntoDB = async (course: TCourse) => {
-  const newCourse = await Course.create(course);
+const createCourseIntoDB = async (createdBy: string, course: TCourse) => {
+  const newCourse = await Course.create({ ...course, createdBy });
   return newCourse;
 };
 const getAllCoursesFromDB = async (query: Record<string, unknown>) => {
-  const courseQuery = new QueryBuilder(Course.find(), query)
+  const courseQuery = new QueryBuilder(
+    Course.find().populate(
+      'createdBy',
+      '-password -passwordHistory -updatePasswordAt -createdAt -updatedAt -__v -createdAt -updatedAt',
+    ),
+    query,
+  )
     .filter()
     .sort()
     .paginate();

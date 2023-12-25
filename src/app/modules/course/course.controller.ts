@@ -5,7 +5,8 @@ import sendResponseMessage from '../../utils/sendResponse';
 import { CourseService } from './course.services';
 
 const createCourse = catchAsyncFunc(async (req: Request, res: Response) => {
-  const newCourse = await CourseService.createCourseIntoDB(req.body);
+  const createdBy = req.user?.id;
+  const newCourse = await CourseService.createCourseIntoDB(createdBy, req.body);
   sendResponseMessage(res, {
     success: true,
     statusCode: 201,
