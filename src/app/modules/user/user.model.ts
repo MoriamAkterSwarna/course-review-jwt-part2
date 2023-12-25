@@ -19,14 +19,27 @@ export const UserSchema = new Schema<TUser>(
       type: String,
       required: true,
     },
+    updatePasswordAt: {
+      type: Date,
+      default: null,
+    },
     role: {
       type: String,
       enum: ['user', 'admin'],
       default: 'user',
     },
+    passwordHistory: [
+      {
+        password: String,
+        updatePasswordAt: Date,
+      },
+    ],
   },
   {
     timestamps: true,
+    toJSON: {
+      virtuals: true,
+    },
   },
 );
 
@@ -36,7 +49,9 @@ UserSchema.pre('save', async function (next) {
 });
 
 UserSchema.post('save', async function (doc, next) {
-  const user = await User.findById(doc._id).select('-password');
+  const user = await User.findById(doc._id).select(
+    '-password -passwordHistory',
+  );
   if (user) {
     Object.assign(doc, user);
   }

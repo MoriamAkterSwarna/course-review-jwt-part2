@@ -17,6 +17,7 @@ export type TErrorResponse = {
     message?: string;
     errorCode?: string;
   };
+  issues?: TErrorIssue[];
   stack?: string;
 };
 export type TErrorIssue = {

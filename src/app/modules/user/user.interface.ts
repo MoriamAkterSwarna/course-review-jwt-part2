@@ -5,6 +5,8 @@ export type TUser = {
   email: string;
   password: string;
   role: 'user' | 'admin';
+  updatePasswordAt?: Date;
+  passwordHistory?: Array<{ password: string; updatePasswordAt: Date }>;
 };
 
 export type TRole = keyof typeof ROLE;

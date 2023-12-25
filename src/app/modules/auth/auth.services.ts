@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
@@ -9,10 +10,9 @@ import { createToken } from './auth.utils';
 
 const userLogin = async (payload: TLoginUser) => {
   console.log(payload);
-  const isUserExists = await User.findOne(
-    { username: payload?.username },
-    // { password: 0 },
-  );
+  const isUserExists = await User.findOne({
+    username: payload?.username,
+  }).select('+password +passwordHistory +updatePasswordAt');
   //   console.log(isUserExists);
   if (!isUserExists) {
     throw new GenericError(httpStatus.NOT_FOUND, 'User not found');
@@ -43,18 +43,44 @@ const userLogin = async (payload: TLoginUser) => {
 };
 const changePassword = async (
   user: JwtPayload,
-  payload: { oldPassword: string; newPassword: string },
+  payload: { currentPassword: string; newPassword: string },
 ) => {
-  //   console.log(payload, 'payload');
-  //   console.log(user, 'user');
-  const isUserExists = await User.findOne({ _id: user.id });
-  //   console.log(isUserExists, 'isUserExists');
-  // //   console.log(isUserExists);
+  const { username, iat } = user;
+  const isUserExists = await User.findOne({ _id: user.id }).select(
+    '+password +passwordHistory +updatePasswordAt',
+  );
+  // console.log(isUserExists, 'isUserExists');
   if (!isUserExists) {
     throw new GenericError(httpStatus.NOT_FOUND, 'User not found');
   }
+  if (!iat) {
+    throw new GenericError(httpStatus.UNAUTHORIZED, 'Invalid credentials');
+  }
+  // console.log(isUserExists.updatePasswordAt, 'isUserExists.updatePasswordAt');
+
+  const newPassword = payload?.newPassword;
+  // console.log(newPassword, 'new pass');
+
+  const passwordHistory = isUserExists.passwordHistory || [];
+  const lastTwoPassExists = passwordHistory.slice(-3);
+  // console.log(lastTwoPassExists, 'lastTwoPassExists');
+  const isLastTwoPassMatched = await Promise.all(
+    lastTwoPassExists.map(elem => bcrypt.compare(newPassword, elem.password)),
+  ).then(results => results.includes(true));
+  // console.log(isLastTwoPassMatched, 'isLastTwoPassMatched');
+  if (isLastTwoPassMatched) {
+    const lastPasswordChange =
+      lastTwoPassExists[lastTwoPassExists.length - 1].updatePasswordAt;
+    const formattedDate = `${lastPasswordChange.getDate()}-${
+      lastPasswordChange.getMonth() + 1
+    }-${lastPasswordChange.getFullYear()} at ${lastPasswordChange.getHours()}:${lastPasswordChange.getMinutes()}`;
+    throw new GenericError(
+      httpStatus.UNAUTHORIZED,
+      `Password change failed. Ensure the new password is unique and not among the last 2 used (last used on ${formattedDate}).`,
+    );
+  }
   const isPasswordMatched = await bcrypt.compare(
-    payload?.oldPassword,
+    payload?.currentPassword,
     isUserExists?.password,
   );
   //   console.log(isPasswordMatched);
@@ -66,6 +92,13 @@ const changePassword = async (
     payload?.newPassword,
     Number(config.salt_rounds),
   );
+  const passWithUpdatedTime = [
+    ...passwordHistory,
+    {
+      password: newHashPass,
+      updatePasswordAt: new Date(),
+    },
+  ];
 
   const updatedUser = await User.findByIdAndUpdate(
     {
@@ -75,9 +108,14 @@ const changePassword = async (
     },
     {
       password: newHashPass,
+      passwordHistory: passWithUpdatedTime,
+      updatePasswordAt: new Date(),
     },
-  ).select('-password');
-  //   console.log(updatedUser, 'updatedUser');
+    {
+      new: true,
+    },
+  ).select('-password -passwordHistory -updatePasswordAt');
+  // console.log(updatedUser, 'updatedUser');
   return updatedUser;
 };
 

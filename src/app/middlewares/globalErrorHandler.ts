@@ -12,7 +12,7 @@ const globalErrorHandler = (
 ) => {
   let errorResponse: TErrorResponse = {
     statusCode: err.statusCode || 500,
-    success: err.status || 'error',
+    success: err.status,
     message: err.message || 'Server Error',
     errorMessage: err.errorMessage || 'Something went wrong',
     errorDetails: err.errorDetails || {},
@@ -33,10 +33,10 @@ const globalErrorHandler = (
 
   res.status(errorResponse.statusCode).json({
     statusCode: errorResponse.statusCode || 500,
-    success: errorResponse.success || 'error',
+    success: errorResponse.success,
     message: errorResponse.message || 'Server Error',
-    errorMessage: errorResponse.errorMessage || 'Something went wrong',
-    errorDetails: errorResponse.errorDetails || {},
+    errorMessage: errorResponse.errorMessage,
+    errorDetails: errorResponse.errorDetails,
     stack: err.stack || '',
   });
 };
