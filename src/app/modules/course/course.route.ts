@@ -1,4 +1,5 @@
 import express from 'express';
+import authHelp from '../../middlewares/authHelp';
 import validateZodRequest from '../../middlewares/validateZodRequest';
 import { CourseController } from './course.controller';
 import { CourseValidation } from './course.validation';
@@ -6,6 +7,7 @@ export const router = express.Router();
 
 router.post(
   '/course',
+  authHelp('admin'),
   validateZodRequest(CourseValidation.createCourseValidationSchema),
   CourseController.createCourse,
 );

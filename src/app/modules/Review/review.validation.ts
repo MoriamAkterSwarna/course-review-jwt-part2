@@ -7,7 +7,6 @@ const reviewValidationSchema = z.object({
     .min(1, { message: 'Rating must be greater than or equal 1' })
     .max(5, { message: 'Rating must be less than or equal 5' }),
   review: z.string(),
-  createdBy: z.string(),
 });
 
 export const ReviewValidation = {

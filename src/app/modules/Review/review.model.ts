@@ -24,7 +24,6 @@ export const ReviewSchema = new Schema<TReview>({
   createdBy: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
   },
 });
 

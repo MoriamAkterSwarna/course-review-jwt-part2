@@ -5,13 +5,19 @@ import { CategoryServices } from './category.services';
 
 const createCategoryController = catchAsyncFunc(
   async (req: Request, res: Response) => {
-    const newCategory = await CategoryServices.createCategoryIntoDB(req.body);
+    console.log(req.user);
+    const createdBy = req.user.id;
+    const result = await CategoryServices.createCategoryIntoDB(
+      createdBy,
+      req.body,
+    );
+    console.log(result);
 
     sendResponseMessage(res, {
       success: true,
       statusCode: 201,
       message: 'Category created successfully',
-      data: newCategory,
+      data: result,
     });
   },
 );

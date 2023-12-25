@@ -5,7 +5,10 @@ import sendResponseMessage from '../../utils/sendResponse';
 import { ReviewService } from './review.services';
 
 const createReview = catchAsyncFunc(async (req: Request, res: Response) => {
-  const newReview = await ReviewService.createReviewIntoDB(req.body);
+  const createdBy = req.user;
+  // console.log(createdBy);
+  const newReview = await ReviewService.createReviewIntoDB(createdBy, req.body);
+  // console.log(newReview);
   sendResponseMessage(res, {
     success: true,
     statusCode: 201,
