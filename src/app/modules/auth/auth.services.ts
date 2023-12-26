@@ -10,7 +10,8 @@ import { TLoginUser } from './auth.interface';
 import { createToken } from './auth.utils';
 
 const userLogin = async (payload: TLoginUser) => {
-  console.log(payload);
+  // console.log(payload);
+  const username = payload?.username;
   const isUserExists = await User.findOne({
     username: payload?.username,
   }).select('+password +passwordHistory +updatePasswordAt');
@@ -40,7 +41,7 @@ const userLogin = async (payload: TLoginUser) => {
     config.jwt_access_expires_in as string,
   );
   //   console.log(accessToken);
-  return { jwtPayload, accessToken };
+  return { username, jwtPayload, accessToken };
 };
 const changePassword = async (
   user: JwtPayload,
@@ -63,6 +64,7 @@ const changePassword = async (
   // console.log(newPassword, 'new pass');
 
   const passwordHistory = isUserExists.passwordHistory || [];
+  // console.log(passwordHistory, 'passwordHistory');
   const lastTwoPassExists = passwordHistory.slice(-3);
   // console.log(lastTwoPassExists, 'lastTwoPassExists');
   const isLastTwoPassMatched = await Promise.all(

@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api', router);
-app.use('/auth', AuthRouter);
+app.use('/api/auth', AuthRouter);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Course Review application is loading...');

@@ -28,7 +28,7 @@ const getAllCourses = catchAsyncFunc(async (req: Request, res: Response) => {
       limit: Number(limit),
       total: courses.length || 0,
     },
-    data: courses,
+    courses: courses,
   });
 });
 
@@ -53,7 +53,7 @@ const getCourseAndReviews = catchAsyncFunc(
       success: true,
       statusCode: 200,
       message: 'Course and Reviews retrieved successfully',
-      data: course,
+      course: course,
     });
   },
 );
@@ -63,7 +63,7 @@ const getBestCourses = catchAsyncFunc(async (req: Request, res: Response) => {
     success: true,
     statusCode: 200,
     message: 'Best Courses retrieved successfully',
-    data: bestCourses,
+    course: bestCourses,
   });
 });
 export const CourseController = {

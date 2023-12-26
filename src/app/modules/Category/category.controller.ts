@@ -28,7 +28,7 @@ const getAllCategoriesController = catchAsyncFunc(
       success: true,
       statusCode: 200,
       message: 'Categories retrieved successfully',
-      data: categories,
+      categories: categories,
     });
   },
 );

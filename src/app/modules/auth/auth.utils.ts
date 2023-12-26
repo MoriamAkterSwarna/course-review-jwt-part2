@@ -5,6 +5,7 @@ export const createToken = (
     id: string;
     role: 'user' | 'admin';
     email: string;
+    username?: string;
   },
   secret: string,
   expiresIn: string,

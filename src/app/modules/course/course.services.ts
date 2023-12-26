@@ -68,6 +68,7 @@ const updateCourseIntoDB = async (
       newUpdatedCourse.durationInWeeks = durationInWeeks;
     }
 
+    // non primitive data => array of object update
     if (tags && tags.length > 0) {
       for (const tag of tags) {
         if (tag.isDeleted) {
@@ -85,6 +86,7 @@ const updateCourseIntoDB = async (
         throw new GenericError(httpStatus.BAD_REQUEST, 'Tag already exists');
     }
 
+    // non primitive data => object update
     if (details && Object.keys(details).length) {
       for (const [key, value] of Object.entries(details)) {
         newUpdatedCourse[`details.${key}`] = value;

@@ -4,6 +4,7 @@ import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
 import { config } from '../config';
 import GenericError from '../errors/genericError';
+import JWTError from '../errors/jwtError';
 import { verifyToken } from '../modules/auth/auth.utils';
 import { TRole } from '../modules/user/user.interface';
 import { User } from '../modules/user/user.model';
@@ -13,26 +14,27 @@ const authHelp = (...roles: TRole[]) => {
   return catchAsyncFunc(
     async (req: Request, res: Response, next: NextFunction) => {
       const token = req.headers.authorization;
-      //   console.log(token, 'token');
 
       if (!token) {
-        throw new GenericError(
+        throw new JWTError(
           httpStatus.UNAUTHORIZED,
           'Unauthorized Access!!',
+          null,
         );
       }
       const decoded = verifyToken(token, config.jwt_access_secret as string);
       const { _id, username, role, email, iat } = decoded;
-      //   console.log(decoded, 'decoded');
-      const user = await User.findOne(username);
+
+      const user = await User.findOne({ username: username });
       if (!user) {
         throw new GenericError(httpStatus.NOT_FOUND, 'User not found');
       }
 
       if (role && !roles.includes(role)) {
-        throw new GenericError(
+        throw new JWTError(
           httpStatus.UNAUTHORIZED,
-          'Unauthorized Access!!',
+          'Unauthorized Access',
+          null,
         );
       }
       req.user = decoded as JwtPayload;

@@ -10,7 +10,10 @@ type TResponseData<T> = {
     limit?: number;
     total?: number;
   };
-  data: T;
+  data?: T;
+  categories?: T;
+  course?: T;
+  courses?: T;
 };
 
 const sendResponseMessage = <T>(res: Response, data: TResponseData<T>) => {

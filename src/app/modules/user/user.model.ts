@@ -37,14 +37,17 @@ export const UserSchema = new Schema<TUser>(
   },
   {
     timestamps: true,
-    toJSON: {
-      virtuals: true,
-    },
   },
 );
 
 UserSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, Number(config.salt_rounds));
+  this.passwordHistory = [
+    {
+      password: this.password,
+      updatePasswordAt: new Date(),
+    },
+  ];
   next();
 });
 

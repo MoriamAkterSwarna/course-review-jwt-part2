@@ -4,22 +4,23 @@ import { AuthServices } from './auth.services';
 
 const loginUser = catchAsyncFunc(async (req, res) => {
   const user = await AuthServices.userLogin(req.body);
-  const { accessToken, jwtPayload } = user;
+  const { username, accessToken, jwtPayload } = user;
+  const userData = { username, ...jwtPayload };
   sendResponseMessage(res, {
     success: true,
     statusCode: 200,
     message: 'User log in successful',
     data: {
-      user: jwtPayload,
+      user: userData,
       token: accessToken,
     },
   });
 });
 const changePassword = catchAsyncFunc(async (req, res) => {
-  // console.log(req.user);
-  const { ...passInfo } = req.body;
-  const user = await AuthServices.changePassword(req.user, passInfo);
-  // console.log(user, 'user');
+  console.log(req.user, 'req.user');
+  // const { ...passInfo } = req.body;
+  const user = await AuthServices.changePassword(req.user, req.body);
+  console.log(user, 'user');
   sendResponseMessage(res, {
     success: true,
     statusCode: 200,

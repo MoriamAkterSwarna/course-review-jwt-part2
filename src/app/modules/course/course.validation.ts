@@ -1,7 +1,7 @@
 import { z } from 'zod';
 const TagsValidationSchema = z.object({
   name: z.string(),
-  isDeleted: z.boolean(),
+  isDeleted: z.boolean().optional(),
 });
 
 const DetailsValidationSchema = z.object({
@@ -10,7 +10,9 @@ const DetailsValidationSchema = z.object({
 });
 
 const createCourseValidationSchema = z.object({
-  title: z.string(),
+  title: z.string({
+    required_error: 'Title is required',
+  }),
   instructor: z.string(),
   categoryId: z.string(),
   price: z.number().min(1, { message: 'Price must be Greater than 0' }),
@@ -21,7 +23,6 @@ const createCourseValidationSchema = z.object({
   provider: z.string(),
   durationWeeks: z.number().optional(),
   details: DetailsValidationSchema,
-  // createdBy: z.string(),
 });
 const updateTagsValidationSchema = z.object({
   name: z.string().optional(),
