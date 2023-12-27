@@ -1,5 +1,6 @@
 import { z } from 'zod';
-const passFormat = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&]{8,}$/;
+const passFormat =
+  /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
 const createUserValidationSchema = z.object({
   username: z.string({
     required_error: 'Username is required',

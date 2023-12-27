@@ -23,6 +23,9 @@ const sendResponseMessage = <T>(res: Response, data: TResponseData<T>) => {
     message: data?.message,
     meta: data?.meta,
     data: data?.data,
+    categories: data?.categories,
+    course: data?.course,
+    courses: data?.courses,
   });
 };
 export default sendResponseMessage;

@@ -25,7 +25,7 @@ const authHelp = (...roles: TRole[]) => {
       const decoded = verifyToken(token, config.jwt_access_secret as string);
       const { _id, username, role, email, iat } = decoded;
 
-      const user = await User.findOne({ username: username });
+      const user = await User.findOne(username);
       if (!user) {
         throw new GenericError(httpStatus.NOT_FOUND, 'User not found');
       }

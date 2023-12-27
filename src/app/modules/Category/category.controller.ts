@@ -23,12 +23,12 @@ const createCategoryController = catchAsyncFunc(
 );
 const getAllCategoriesController = catchAsyncFunc(
   async (req: Request, res: Response) => {
-    const categories = await CategoryServices.getAllCategoriesFromDB();
+    const categoriesData = await CategoryServices.getAllCategoriesFromDB();
     sendResponseMessage(res, {
       success: true,
       statusCode: 200,
       message: 'Categories retrieved successfully',
-      categories: categories,
+      categories: categoriesData,
     });
   },
 );
